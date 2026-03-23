@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
@@ -39,7 +40,7 @@ export default function TrashGameCard({ game, onRestore }: TrashGameCardProps) {
               <div key={p.player_id} className="flex items-center gap-1">
                 {p.position === 1 && <span className="text-xs">👑</span>}
                 <PlayerAvatar player={p.player!} size="sm" />
-                <span className="text-sm tabular font-serif text-ink-900">{p.score} VP</span>
+                <span className="text-sm tabular font-serif text-ink-900 inline-flex items-center gap-1">{p.score} <Image src="/vp-icon.png" width={12} height={12} alt="VP" unoptimized className="opacity-70" /></span>
               </div>
             ))}
           </div>

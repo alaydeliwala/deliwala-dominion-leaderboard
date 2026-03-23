@@ -30,7 +30,7 @@ body {
   background-color: var(--parchment);
   color: var(--ink);
   font-family: 'Crimson Text', Georgia, serif;
-  font-size: 18px;
+  font-size: 20px;
   /* Dark brown side borders like the Dominion box frame */
   border-left: 6px solid var(--dominion-brown);
   border-right: 6px solid var(--dominion-brown);

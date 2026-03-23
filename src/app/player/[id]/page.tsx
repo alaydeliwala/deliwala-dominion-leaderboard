@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
 import { PLAYER_BY_SLUG, PLAYERS } from '@/lib/players'
 import { getLeaderboardStats } from '@/lib/queries/stats'
@@ -73,7 +74,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
           { label: 'Games Played', value: playerStats.games, icon: '⚔️' },
           { label: 'Victories', value: playerStats.wins, icon: '🏆', color: 'text-forest-800' },
           { label: 'Win Rate', value: playerStats.games > 0 ? formatWinRate(playerStats.win_rate) : '—', icon: '📊', color: 'text-gold-600' },
-          { label: 'Avg Score', value: playerStats.games > 0 ? playerStats.avg_score.toFixed(1) + ' VP' : '—', icon: '🎯' },
+          { label: 'Avg Score', value: playerStats.games > 0 ? <span className="inline-flex items-center gap-1">{playerStats.avg_score.toFixed(1)} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: '🎯' },
         ].map((stat) => (
           <Card key={stat.label} className="text-center">
             <div className="text-2xl mb-1">{stat.icon}</div>
@@ -86,8 +87,8 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       {/* More Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Best Score', value: playerStats.best_score > 0 ? playerStats.best_score + ' VP' : '—', icon: '⭐' },
-          { label: 'Total VP Earned', value: playerStats.total_vp.toLocaleString(), icon: '💎', color: 'text-gold-600' },
+          { label: 'Best Score', value: playerStats.best_score > 0 ? <span className="inline-flex items-center gap-1">{playerStats.best_score} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: '⭐' },
+          { label: 'Total VP Earned', value: <span className="inline-flex items-center gap-1">{playerStats.total_vp.toLocaleString()} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span>, icon: '💎', color: 'text-gold-600' },
           { label: 'Longest Win Streak', value: playerStats.longest_win_streak || '—', icon: '🔥', color: 'text-forest-800' },
           { label: 'Longest Loss Streak', value: playerStats.longest_loss_streak || '—', icon: '🥶', color: 'text-crimson-700' },
         ].map((stat) => (
@@ -160,7 +161,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                   <span className={`font-semibold ${myParticipant.position === 1 ? 'text-forest-800' : 'text-crimson-700'}`}>
                     {myParticipant.position === 1 ? '👑 Won' : `${myParticipant.position}${myParticipant.position === 2 ? 'nd' : myParticipant.position === 3 ? 'rd' : 'th'}`}
                   </span>
-                  <span className="tabular text-ink-900">{myParticipant.score} VP</span>
+                  <span className="tabular text-ink-900 inline-flex items-center gap-1">{myParticipant.score} <Image src="/vp-icon.png" width={12} height={12} alt="VP" unoptimized /></span>
                   <div className="flex gap-1 ml-auto">
                     {game.participants.filter(p => p.player_id !== player.id).map((p) => (
                       <PlayerAvatar key={p.player_id} player={p.player!} size="sm" />

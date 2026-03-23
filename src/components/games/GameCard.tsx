@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
@@ -59,7 +60,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                   {p.player!.name.split(' ')[0]}
                 </div>
                 <div className={`text-base font-bold tabular leading-tight ${p.position === 1 ? 'text-forest-700' : 'text-ink-900'}`}>
-                  {p.score} <span className="text-xs font-normal opacity-50">VP</span>
+                  {p.score} <Image src="/vp-icon.png" width={11} height={11} alt="VP" unoptimized className="inline-block opacity-50 ml-0.5 mb-0.5" />
                 </div>
               </div>
             </div>
@@ -94,7 +95,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                   <PlayerAvatar player={p.player!} size="md" showName />
                   <span className="ml-auto text-xl font-bold tabular text-ink-900 shrink-0">
                     {p.score}
-                    <span className="text-sm font-normal opacity-50 ml-1">VP</span>
+                    <Image src="/vp-icon.png" width={13} height={13} alt="VP" unoptimized className="inline-block opacity-50 ml-1 mb-0.5" />
                   </span>
                 </div>
               ))}

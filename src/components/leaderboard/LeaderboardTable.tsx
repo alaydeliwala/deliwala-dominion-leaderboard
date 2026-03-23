@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { PlayerStats } from '@/types'
 import RankBadge from '@/components/ui/Badge'
@@ -48,7 +49,7 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
               <th className="px-4 py-2 text-center tabular">W</th>
               <th className="px-4 py-2 text-center tabular">L</th>
               <th className="px-4 py-2 text-center tabular">Win %</th>
-              <th className="px-4 py-2 text-center tabular">Avg VP</th>
+              <th className="px-4 py-2 text-center tabular"><span className="inline-flex items-center gap-1 justify-center">Avg <Image src="/vp-icon.png" width={11} height={11} alt="VP" unoptimized /></span></th>
               <th className="px-4 py-2 text-center">Streak</th>
             </tr>
           </thead>
@@ -77,7 +78,7 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
                   {s.games === 0 ? '—' : formatWinRate(s.win_rate)}
                 </td>
                 <td className="px-4 py-3 text-center tabular text-ink-900">
-                  {s.games === 0 ? '—' : s.avg_score.toFixed(1)}
+                  {s.games === 0 ? '—' : <span className="inline-flex items-center gap-1 justify-center">{s.avg_score.toFixed(1)} <Image src="/vp-icon.png" width={11} height={11} alt="VP" unoptimized /></span>}
                 </td>
                 <td className="px-4 py-3 text-center">
                   {s.current_streak > 0 && s.streak_type !== 'none' ? (

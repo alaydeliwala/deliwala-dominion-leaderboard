@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { PLAYERS } from '@/lib/players'
 import Button from '@/components/ui/Button'
@@ -188,7 +189,7 @@ export default function AddGameForm() {
                     onChange={(e) => handleScoreChange(id, e.target.value)}
                     className="ml-auto w-20 border-2 border-parchment-200 rounded px-2 py-1 text-right bg-parchment-50 font-serif text-ink-900 tabular focus:border-gold-400 focus:outline-none"
                   />
-                  <span className="text-xs text-gold-600">VP</span>
+                  <Image src="/vp-icon.png" width={14} height={14} alt="VP" unoptimized />
                 </div>
               )
             })}
@@ -204,7 +205,7 @@ export default function AddGameForm() {
                   <div key={id} className="flex items-center gap-2 text-xs mb-1">
                     <span className="w-4">{i === 0 ? '👑' : `${i + 1}.`}</span>
                     <PlayerAvatar player={p} size="sm" showName />
-                    <span className="ml-auto tabular font-semibold">{scores[id]} VP</span>
+                    <span className="ml-auto tabular font-semibold inline-flex items-center gap-1">{scores[id]} <Image src="/vp-icon.png" width={11} height={11} alt="VP" unoptimized /></span>
                   </div>
                 )
               })}

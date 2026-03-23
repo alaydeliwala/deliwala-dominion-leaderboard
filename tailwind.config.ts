@@ -42,6 +42,16 @@ const config: Config = {
         display: ['"IM Fell English"', 'Georgia', 'serif'],
         serif: ['"Crimson Text"', 'Georgia', 'serif'],
       },
+      fontSize: {
+        xs:   ['0.875rem', { lineHeight: '1.4' }],   // 14px (was 12px)
+        sm:   ['1rem',     { lineHeight: '1.5' }],   // 16px (was 14px)
+        base: ['1.125rem', { lineHeight: '1.6' }],   // 18px (was 16px)
+        lg:   ['1.25rem',  { lineHeight: '1.6' }],   // 20px (was 18px)
+        xl:   ['1.375rem', { lineHeight: '1.5' }],   // 22px (was 20px)
+        '2xl':['1.625rem', { lineHeight: '1.4' }],   // 26px (was 24px)
+        '3xl':['2rem',     { lineHeight: '1.3' }],   // 32px (was 30px)
+        '4xl':['2.5rem',   { lineHeight: '1.2' }],   // 40px (was 36px)
+      },
       keyframes: {
         shake: {
           '0%, 100%': { transform: 'translateX(0)' },
