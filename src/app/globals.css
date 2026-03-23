@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Dominion Color Palette ───────────────────────────────────────────────
+   Sourced from the actual Dominion card game:
+   - Navy blue  : title lettering color on box & cards  (#1E2D5C)
+   - Amber gold : treasure card color, trim             (#C9A227)
+   - Parchment  : action card background                (#EFE0BB)
+   - Forest green: victory card color                   (#2A5C2A)
+   - Dark brown : card border / box frame               (#3B1F0A)
+   - Crimson    : curse card / negative                 (#8B1A1A)
+   ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --dominion-navy:   #1E2D5C;
+  --dominion-gold:   #C9A227;
+  --dominion-brown:  #3B1F0A;
+  --parchment:       #EFE0BB;
+  --parchment-100:   #E6D0A0;
+  --parchment-200:   #D4BA80;
+  --forest:          #2A5C2A;
+  --forest-light:    #3A7A3A;
+  --ink:             #1C1208;
+}
+
+body {
+  background-color: var(--parchment);
+  color: var(--ink);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 18px;
+  /* Dark brown side borders like the Dominion box frame */
+  border-left: 6px solid var(--dominion-brown);
+  border-right: 6px solid var(--dominion-brown);
+  min-height: 100vh;
+}
+
+/* Parchment texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+* {
+  position: relative;
+  z-index: 1;
+}
+
+h1, h2, h3 {
+  font-family: 'IM Fell English', Georgia, serif;
+}
+
+.font-display {
+  font-family: 'IM Fell English', Georgia, serif;
+}
+
+/* Action card — parchment with brown border */
+.card-parchment {
+  background-color: var(--parchment-100);
+  border: 2px solid var(--parchment-200);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(59, 31, 10, 0.1), 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Treasure card — gold border glow */
+.card-parchment-gold {
+  background-color: var(--parchment-100);
+  border: 2px solid var(--dominion-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(201, 162, 39, 0.3), 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Victory card — green border */
+.card-parchment-green {
+  background-color: var(--parchment-100);
+  border: 2px solid var(--forest);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(42, 92, 42, 0.2), 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Dominion gold divider */
+.divider-gold {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--dominion-gold), transparent);
+  margin: 1rem 0;
+}
+
+.divider-green {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--forest), transparent);
+  margin: 1rem 0;
+}
+
+/* Tabular numbers for stats */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}

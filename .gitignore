@@ -1,0 +1,11 @@
+.next/
+node_modules/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+.env
+.env.local
+.env*.local
+out/
+dist/

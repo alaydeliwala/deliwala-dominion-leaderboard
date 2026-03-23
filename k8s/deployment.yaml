@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dominion-leaderboard
+  namespace: default
+  labels:
+    app: dominion-leaderboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dominion-leaderboard
+  template:
+    metadata:
+      labels:
+        app: dominion-leaderboard
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      volumes:
+        - name: dominion-db
+          persistentVolumeClaim:
+            claimName: dominion-db-pvc
+      containers:
+        - name: dominion-leaderboard
+          image: ghcr.io/alaydeliwala/dominion-leaderboard:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DATABASE_URL
+              value: "file:/data/dominion.db"
+            - name: MASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dominion-secrets
+                  key: MASTER_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - name: dominion-db
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dominion-leaderboard
+  namespace: default
+spec:
+  selector:
+    app: dominion-leaderboard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
