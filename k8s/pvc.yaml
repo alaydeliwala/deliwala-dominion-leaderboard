@@ -4,6 +4,8 @@ metadata:
   name: dominion-db-pvc
   namespace: default
 spec:
+  storageClassName: ""
+  volumeName: dominion-db-pv
   accessModes:
     - ReadWriteOnce
   resources:

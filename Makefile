@@ -1,4 +1,4 @@
-.PHONY: dev build start lint install docker-build docker-run k8s-deploy k8s-secret clean
+.PHONY: dev build start lint install docker-build docker-run k8s-secret k8s-deploy k8s-pv clean
 
 dev:
 	npm run dev
@@ -29,9 +29,13 @@ k8s-secret:
 	@read -p "Master password: " pw; \
 	kubectl create secret generic dominion-secrets --from-literal=MASTER_PASSWORD=$$pw
 
-k8s-deploy:
+k8s-pv:
+	kubectl apply -f k8s/pv.yaml
+
+k8s-deploy: k8s-pv
 	kubectl apply -f k8s/pvc.yaml
 	kubectl apply -f k8s/deployment.yaml
+	kubectl apply -f k8s/backup-cronjob.yaml
 
 clean:
 	rm -rf .next node_modules dominion.db dominion.db-shm dominion.db-wal
