@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
+import { Crown, Swords } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { PLAYERS } from '@/lib/players'
 import Button from '@/components/ui/Button'
@@ -203,7 +204,7 @@ export default function AddGameForm() {
                 const p = PLAYERS.find((pl) => pl.id === id)!
                 return (
                   <div key={id} className="flex items-center gap-2 text-xs mb-1">
-                    <span className="w-4">{i === 0 ? '👑' : `${i + 1}.`}</span>
+                    <span className="w-4">{i === 0 ? <Crown size={14} className="text-gold-400" /> : `${i + 1}.`}</span>
                     <PlayerAvatar player={p} size="sm" showName />
                     <span className="ml-auto tabular font-semibold inline-flex items-center gap-1">{scores[id]} <Image src="/vp-icon.png" width={11} height={11} alt="VP" unoptimized /></span>
                   </div>
@@ -276,7 +277,7 @@ export default function AddGameForm() {
       )}
 
       <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-        {submitting ? '⚔ Recording...' : '⚔ Record This Battle'}
+        {submitting ? 'Recording...' : <><Swords size={16} className="inline-block mr-1" />Record This Battle</>}
       </Button>
     </form>
   )

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Swords } from 'lucide-react'
 import { getLeaderboardStats } from '@/lib/queries/stats'
 import LeaderboardTable from '@/components/leaderboard/LeaderboardTable'
 import HeadToHeadGrid from '@/components/leaderboard/HeadToHeadGrid'
@@ -46,13 +47,13 @@ export default function HomePage() {
       {/* Empty State */}
       {data.total_games === 0 ? (
         <div className="card-parchment-gold p-10 text-center my-8">
-          <div className="text-5xl mb-4">⚔️</div>
+          <div className="mb-4 flex justify-center"><Swords size={48} className="text-gold-400" /></div>
           <h2 className="font-display text-3xl text-ink-900 mb-2">No Battles Recorded Yet</h2>
           <p className="font-serif text-gold-600 italic mb-6">
             The kingdom awaits its first contest. Who shall claim the throne?
           </p>
           <Link href="/add-game">
-            <Button size="lg">⚔ Record the First Battle</Button>
+            <Button size="lg"><Swords size={16} className="inline-block mr-2" />Record the First Battle</Button>
           </Link>
         </div>
       ) : (
@@ -71,7 +72,7 @@ export default function HomePage() {
           {/* CTA */}
           <div className="text-center pt-4">
             <Link href="/add-game">
-              <Button size="lg">⚔ Record a New Battle</Button>
+              <Button size="lg"><Swords size={16} className="inline-block mr-2" />Record a New Battle</Button>
             </Link>
           </div>
         </div>

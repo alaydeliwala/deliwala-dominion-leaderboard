@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
+import { Flame, Snowflake } from 'lucide-react'
 import Link from 'next/link'
 import type { PlayerStats } from '@/types'
 import RankBadge from '@/components/ui/Badge'
@@ -83,7 +84,10 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
                 <td className="px-4 py-3 text-center">
                   {s.current_streak > 0 && s.streak_type !== 'none' ? (
                     <span className={`text-sm font-semibold ${s.streak_type === 'win' ? 'text-forest-800' : 'text-crimson-700'}`}>
-                      {s.streak_type === 'win' ? '🔥' : '🥶'} {s.current_streak}
+                      {s.streak_type === 'win'
+                        ? <Flame size={14} className="inline-block mr-1 text-forest-700" />
+                        : <Snowflake size={14} className="inline-block mr-1 text-crimson-700" />}
+                      {s.current_streak}
                     </span>
                   ) : <span className="text-parchment-300">—</span>}
                 </td>

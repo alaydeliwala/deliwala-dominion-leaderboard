@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import { Crown, RotateCcw, Skull } from 'lucide-react'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
@@ -31,14 +32,14 @@ export default function TrashGameCard({ game, onRestore }: TrashGameCardProps) {
       <div className="flex items-start gap-3 flex-wrap">
         <div className="flex-1">
           <div className="text-xs text-crimson-700 font-serif mb-1">
-            ⚰ Banished {game.deleted_at ? `on ${formatDate(game.deleted_at.split(' ')[0])}` : ''}
+            <Skull size={13} className="inline-block mr-1" /> Banished {game.deleted_at ? `on ${formatDate(game.deleted_at.split(' ')[0])}` : ''}
             {deletedByPlayer && ` by ${deletedByPlayer.name.split(' ')[0]}`}
           </div>
           <div className="text-sm font-serif text-gold-600 mb-2">{formatDate(game.played_at)}</div>
           <div className="flex items-center gap-2 flex-wrap">
             {game.participants.map((p) => (
               <div key={p.player_id} className="flex items-center gap-1">
-                {p.position === 1 && <span className="text-xs">👑</span>}
+                {p.position === 1 && <Crown size={13} className="text-gold-400" />}
                 <PlayerAvatar player={p.player!} size="sm" />
                 <span className="text-sm tabular font-serif text-ink-900 inline-flex items-center gap-1">{p.score} <Image src="/vp-icon.png" width={12} height={12} alt="VP" unoptimized className="opacity-70" /></span>
               </div>
@@ -49,7 +50,7 @@ export default function TrashGameCard({ game, onRestore }: TrashGameCardProps) {
           )}
         </div>
         <Button variant="ghost" size="sm" onClick={handleRestore} disabled={restoring} className="border-forest-800 text-forest-800 hover:bg-forest-700/10">
-          {restoring ? 'Restoring...' : '↩ Reinstate'}
+          {restoring ? 'Restoring...' : <><RotateCcw size={13} className="inline-block mr-1" />Reinstate</>}
         </Button>
       </div>
     </div>

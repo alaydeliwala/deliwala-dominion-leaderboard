@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
+import { Crown, X } from 'lucide-react'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
@@ -53,7 +54,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
         <div className="flex items-center gap-5 flex-wrap flex-1">
           {game.participants.map((p) => (
             <div key={p.player_id} className="flex items-center gap-2">
-              {p.position === 1 && <span className="text-base">👑</span>}
+              {p.position === 1 && <Crown size={16} className="text-gold-400 shrink-0" />}
               <PlayerAvatar player={p.player!} size="md" />
               <div>
                 <div className="text-sm font-semibold text-ink-900 leading-tight">
@@ -90,7 +91,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                   }`}
                 >
                   <span className="text-lg w-7 text-center shrink-0">
-                    {p.position === 1 ? '👑' : `${p.position}.`}
+                    {p.position === 1 ? <Crown size={18} className="text-gold-400" /> : `${p.position}.`}
                   </span>
                   <PlayerAvatar player={p.player!} size="md" showName />
                   <span className="ml-auto text-xl font-bold tabular text-ink-900 shrink-0">
@@ -136,7 +137,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded border-2 border-crimson-700 text-crimson-700 font-serif text-sm hover:bg-crimson-700 hover:text-parchment-50 transition-all"
                   onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
                 >
-                  ✕ Remove from chronicles
+                  <X size={14} /> Remove from chronicles
                 </button>
               ) : (
                 <div className={shaking ? 'animate-shake' : ''} onClick={(e) => e.stopPropagation()}>

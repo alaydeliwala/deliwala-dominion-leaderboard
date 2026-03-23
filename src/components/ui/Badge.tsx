@@ -1,3 +1,5 @@
+import { Crown } from 'lucide-react'
+
 interface BadgeProps {
   rank: number
 }
@@ -6,7 +8,7 @@ export default function RankBadge({ rank }: BadgeProps) {
   if (rank === 1) {
     return (
       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold-400 border-2 border-gold-600 text-ink-900 font-display font-bold text-sm shadow-[0_0_8px_rgba(212,160,23,0.5)]">
-        👑
+        <Crown size={15} />
       </span>
     )
   }

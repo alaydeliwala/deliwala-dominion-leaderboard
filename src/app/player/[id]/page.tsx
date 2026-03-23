@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Crown, Swords, Trophy, BarChart2, Target, Star, Gem, Flame, Snowflake } from 'lucide-react'
 import { PLAYER_BY_SLUG, PLAYERS } from '@/lib/players'
 import { getLeaderboardStats } from '@/lib/queries/stats'
 import { getActiveGames } from '@/lib/queries/games'
@@ -62,7 +63,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         {rank > 0 && (
           <div className="mt-3 inline-block bg-gold-400/20 border border-gold-400 px-4 py-1 rounded-full">
             <span className="font-display text-ink-900">
-              {rank === 1 ? '👑 Reigning Champion' : `Rank #${rank} in the Kingdom`}
+              {rank === 1 ? <><Crown size={16} className="inline-block mr-1 text-gold-600" />Reigning Champion</> : `Rank #${rank} in the Kingdom`}
             </span>
           </div>
         )}
@@ -71,10 +72,10 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Games Played', value: playerStats.games, icon: '⚔️' },
-          { label: 'Victories', value: playerStats.wins, icon: '🏆', color: 'text-forest-800' },
-          { label: 'Win Rate', value: playerStats.games > 0 ? formatWinRate(playerStats.win_rate) : '—', icon: '📊', color: 'text-gold-600' },
-          { label: 'Avg Score', value: playerStats.games > 0 ? <span className="inline-flex items-center gap-1">{playerStats.avg_score.toFixed(1)} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: '🎯' },
+          { label: 'Games Played', value: playerStats.games, icon: <Swords size={24} /> },
+          { label: 'Victories', value: playerStats.wins, icon: <Trophy size={24} />, color: 'text-forest-800' },
+          { label: 'Win Rate', value: playerStats.games > 0 ? formatWinRate(playerStats.win_rate) : '—', icon: <BarChart2 size={24} />, color: 'text-gold-600' },
+          { label: 'Avg Score', value: playerStats.games > 0 ? <span className="inline-flex items-center gap-1">{playerStats.avg_score.toFixed(1)} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: <Target size={24} /> },
         ].map((stat) => (
           <Card key={stat.label} className="text-center">
             <div className="text-2xl mb-1">{stat.icon}</div>
@@ -87,10 +88,10 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       {/* More Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Best Score', value: playerStats.best_score > 0 ? <span className="inline-flex items-center gap-1">{playerStats.best_score} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: '⭐' },
-          { label: 'Total VP Earned', value: <span className="inline-flex items-center gap-1">{playerStats.total_vp.toLocaleString()} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span>, icon: '💎', color: 'text-gold-600' },
-          { label: 'Longest Win Streak', value: playerStats.longest_win_streak || '—', icon: '🔥', color: 'text-forest-800' },
-          { label: 'Longest Loss Streak', value: playerStats.longest_loss_streak || '—', icon: '🥶', color: 'text-crimson-700' },
+          { label: 'Best Score', value: playerStats.best_score > 0 ? <span className="inline-flex items-center gap-1">{playerStats.best_score} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span> : '—', icon: <Star size={24} /> },
+          { label: 'Total VP Earned', value: <span className="inline-flex items-center gap-1">{playerStats.total_vp.toLocaleString()} <Image src="/vp-icon.png" width={16} height={16} alt="VP" unoptimized /></span>, icon: <Gem size={24} />, color: 'text-gold-600' },
+          { label: 'Longest Win Streak', value: playerStats.longest_win_streak || '—', icon: <Flame size={24} />, color: 'text-forest-800' },
+          { label: 'Longest Loss Streak', value: playerStats.longest_loss_streak || '—', icon: <Snowflake size={24} />, color: 'text-crimson-700' },
         ].map((stat) => (
           <Card key={stat.label} className="text-center">
             <div className="text-2xl mb-1">{stat.icon}</div>
@@ -105,8 +106,8 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         <Card gold className="text-center py-4">
           <p className="font-display text-xl text-ink-900">
             {playerStats.streak_type === 'win'
-              ? `🔥 On a ${playerStats.current_streak}-game winning streak!`
-              : `🥶 On a ${playerStats.current_streak}-game losing streak.`}
+              ? <><Flame size={20} className="inline-block mr-1 text-forest-700" />On a {playerStats.current_streak}-game winning streak!</>
+              : <><Snowflake size={20} className="inline-block mr-1 text-crimson-700" />On a {playerStats.current_streak}-game losing streak.</>}
           </p>
           <p className="text-gold-600 italic font-serif text-sm mt-1">
             {playerStats.streak_type === 'win' ? player.houseWords : 'The tide will turn... probably.'}
@@ -159,7 +160,9 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                 <div key={game.id} className="py-2 flex items-center gap-3 flex-wrap text-sm font-serif">
                   <span className="text-gold-600 w-24 shrink-0">{formatDateShort(game.played_at)}</span>
                   <span className={`font-semibold ${myParticipant.position === 1 ? 'text-forest-800' : 'text-crimson-700'}`}>
-                    {myParticipant.position === 1 ? '👑 Won' : `${myParticipant.position}${myParticipant.position === 2 ? 'nd' : myParticipant.position === 3 ? 'rd' : 'th'}`}
+                    {myParticipant.position === 1
+                      ? <><Crown size={14} className="inline-block mr-1 text-gold-400" />Won</>
+                      : `${myParticipant.position}${myParticipant.position === 2 ? 'nd' : myParticipant.position === 3 ? 'rd' : 'th'}`}
                   </span>
                   <span className="tabular text-ink-900 inline-flex items-center gap-1">{myParticipant.score} <Image src="/vp-icon.png" width={12} height={12} alt="VP" unoptimized /></span>
                   <div className="flex gap-1 ml-auto">
