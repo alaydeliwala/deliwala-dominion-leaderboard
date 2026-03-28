@@ -32,7 +32,9 @@ export default function RecentGames({ games }: RecentGamesProps) {
                 <div className="flex items-center gap-1 flex-wrap flex-1">
                   {game.participants.map((p) => (
                     <div key={p.player_id} className="flex items-center gap-1">
-                      {p.position === 1 && <Crown size={13} className="text-gold-400" />}
+                      <span className="w-3.5 shrink-0 flex justify-center">
+                        {p.position === 1 && <Crown size={13} className="text-gold-400" />}
+                      </span>
                       <PlayerAvatar player={p.player!} size="sm" />
                       <span className={`text-sm tabular ${p.position === 1 ? 'font-semibold text-forest-800' : 'text-ink-900'}`}>
                         {p.score}

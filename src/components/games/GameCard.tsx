@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import { Crown, X } from 'lucide-react'
+import { Crown, Trash2 } from 'lucide-react'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
@@ -42,19 +42,21 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
 
       {/* ── Collapsed header row ─────────────────────────────── */}
       <div
-        className="flex items-center gap-6 px-6 py-5 cursor-pointer hover:bg-parchment-200/40 transition-colors"
+        className="flex items-center gap-3 px-4 py-4 sm:gap-6 sm:px-6 sm:py-5 cursor-pointer hover:bg-parchment-200/40 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
         {/* Date */}
-        <span className="font-display text-base shrink-0 w-36" style={{ color: '#1E2D5C' }}>
+        <span className="font-display text-base shrink-0 w-20 sm:w-36" style={{ color: '#1E2D5C' }}>
           {formatDate(game.played_at)}
         </span>
 
         {/* Player chips */}
-        <div className="flex items-center gap-5 flex-wrap flex-1">
+        <div className="flex items-center gap-3 sm:gap-5 flex-wrap flex-1">
           {game.participants.map((p) => (
             <div key={p.player_id} className="flex items-center gap-2">
-              {p.position === 1 && <Crown size={16} className="text-gold-400 shrink-0" />}
+              <span className="w-4 shrink-0 flex justify-center">
+                {p.position === 1 && <Crown size={16} className="text-gold-400" />}
+              </span>
               <PlayerAvatar player={p.player!} size="md" />
               <div>
                 <div className="text-sm font-semibold text-ink-900 leading-tight">
@@ -73,11 +75,11 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
 
       {/* ── Expanded detail ──────────────────────────────────── */}
       {expanded && (
-        <div className="px-6 pb-6 pt-2 border-t border-parchment-200 animate-fade-in space-y-5">
+        <div className="px-6 pb-6 pt-5 border-t-2 border-gold-400/50 animate-fade-in space-y-5" style={{ backgroundColor: 'rgba(59,31,10,0.04)' }}>
 
           {/* Standings grid */}
           <div>
-            <p className="text-xs uppercase tracking-widest font-serif mb-3" style={{ color: '#C9A227' }}>
+            <p className="text-xs uppercase tracking-widest font-serif mb-3" style={{ color: '#1E2D5C' }}>
               Final Standings
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -106,7 +108,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
           {/* Kingdom cards */}
           {game.kingdom && game.kingdom.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest font-serif mb-2" style={{ color: '#C9A227' }}>
+              <p className="text-xs uppercase tracking-widest font-serif mb-2" style={{ color: '#1E2D5C' }}>
                 Kingdom Cards
               </p>
               <div className="flex flex-wrap gap-2">
@@ -122,22 +124,24 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
           {/* Notes */}
           {game.notes && (
             <div>
-              <p className="text-xs uppercase tracking-widest font-serif mb-1" style={{ color: '#C9A227' }}>
+              <p className="text-xs uppercase tracking-widest font-serif mb-2" style={{ color: '#1E2D5C' }}>
                 Notes
               </p>
-              <p className="text-base italic font-serif text-ink-900">&ldquo;{game.notes}&rdquo;</p>
+              <div className="flex items-start gap-3 px-4 py-3 rounded border border-parchment-200 bg-parchment-100/50">
+                <p className="text-base italic font-serif text-ink-900">&ldquo;{game.notes}&rdquo;</p>
+              </div>
             </div>
           )}
 
           {/* Delete */}
           {onDelete && (
-            <div className="pt-3 border-t border-parchment-200">
+            <div className="pt-3 border-t border-parchment-200 flex justify-end">
               {!showDelete ? (
                 <button
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded border-2 border-crimson-700 text-crimson-700 font-serif text-sm hover:bg-crimson-700 hover:text-parchment-50 transition-all"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-crimson-700/50 text-crimson-700 font-serif text-xs hover:bg-crimson-700 hover:text-parchment-50 hover:border-crimson-700 transition-all"
                   onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
                 >
-                  <X size={14} /> Remove from chronicles
+                  <Trash2 size={11} /> Remove
                 </button>
               ) : (
                 <div className={shaking ? 'animate-shake' : ''} onClick={(e) => e.stopPropagation()}>
