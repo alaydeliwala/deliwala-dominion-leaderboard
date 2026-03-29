@@ -17,7 +17,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className="border-b-2 border-gold-400 shadow-lg" style={{ backgroundColor: '#1E2D5C' }}>
+    <nav className="border-b-2 border-gold-400 shadow-lg" style={{ background: 'linear-gradient(to bottom, #141D3D, #1E2D5C)' }}>
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center">
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity" onClick={() => setOpen(false)}>
           <Image src="/vp-icon.png" alt="VP Shield" width={28} height={28} priority unoptimized className="h-7 w-auto" />
@@ -30,10 +30,10 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className={`px-3 py-1.5 rounded text-sm font-serif transition-colors ${
+              className={`px-3 py-1.5 rounded text-sm font-serif transition-all ${
                 pathname === l.href
-                  ? 'bg-gold-400 text-ink-900 font-semibold'
-                  : 'text-parchment-200 hover:text-gold-300 hover:bg-white/5'
+                  ? 'bg-gold-400 text-ink-900 font-semibold shadow-[0_0_10px_rgba(201,162,39,0.4)]'
+                  : 'text-parchment-200 hover:text-gold-300 hover:bg-white/10'
               }`}
             >
               {l.label}

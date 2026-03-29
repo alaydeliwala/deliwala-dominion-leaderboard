@@ -66,7 +66,7 @@ h1, h2, h3 {
   background-color: var(--parchment-100);
   border: 2px solid var(--parchment-200);
   border-radius: 4px;
-  box-shadow: 0 2px 12px rgba(59, 31, 10, 0.1), 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(59, 31, 10, 0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
 /* Treasure card — gold border glow */
@@ -74,7 +74,7 @@ h1, h2, h3 {
   background-color: var(--parchment-100);
   border: 2px solid var(--dominion-gold);
   border-radius: 4px;
-  box-shadow: 0 0 14px rgba(201, 162, 39, 0.3), 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.35), 0 4px 12px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
 /* Victory card — green border */
@@ -82,7 +82,7 @@ h1, h2, h3 {
   background-color: var(--parchment-100);
   border: 2px solid var(--forest);
   border-radius: 4px;
-  box-shadow: 0 0 14px rgba(42, 92, 42, 0.2), 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 0 18px rgba(42, 92, 42, 0.25), 0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
 /* Dominion gold divider */
@@ -120,4 +120,26 @@ h1, h2, h3 {
 }
 .animate-shake {
   animation: shake 0.5s ease-in-out;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar — parchment + gold theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--parchment-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dominion-gold);
+  border-radius: 4px;
+  border: 1px solid var(--parchment-200);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dominion-brown);
 }

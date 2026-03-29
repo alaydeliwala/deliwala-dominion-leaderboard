@@ -21,7 +21,7 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
   })
 
   return (
-    <div className="card-parchment overflow-hidden">
+    <div className="card-parchment overflow-hidden animate-fade-in">
       <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-wrap gap-2">
         <h2 className="font-display text-2xl text-ink-900">The Rankings</h2>
         <div className="flex gap-1 text-sm">
@@ -42,8 +42,8 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
       <hr className="divider-gold mx-4" />
       <div className="overflow-x-auto">
         <table className="w-full text-sm font-serif">
-          <thead>
-            <tr className="text-gold-600 text-xs uppercase tracking-wider border-b border-parchment-200">
+          <thead className="bg-navy-800/5">
+            <tr className="text-gold-600 text-xs uppercase tracking-wider border-b-2 border-parchment-200">
               <th className="px-4 py-2 text-left w-10">#</th>
               <th className="px-4 py-2 text-left">Heir</th>
               <th className="px-4 py-2 text-center tabular">Games</th>
@@ -58,7 +58,7 @@ export default function LeaderboardTable({ rankings }: LeaderboardTableProps) {
             {sorted.map((s, i) => (
               <tr
                 key={s.player.id}
-                className="border-b border-parchment-200 last:border-0 hover:bg-parchment-100 transition-colors"
+                className={`border-b border-parchment-200 last:border-0 hover:bg-gold-400/8 transition-colors ${i % 2 === 1 ? 'bg-parchment-50/60' : ''}`}
               >
                 <td className="px-4 py-3">
                   <RankBadge rank={i + 1} />

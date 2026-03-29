@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Header */}
-      <div className="text-center py-6">
+      <div className="text-center py-6 animate-fade-in">
         <div className="flex justify-center mb-2">
           <Image
             src="/logo.png"
@@ -32,7 +32,11 @@ export default function HomePage() {
         <p className="font-display text-xl italic" style={{ color: '#1E2D5C' }}>
           Family. Cards. Absolute Chaos. Est. When Dad First Lost.
         </p>
-        <hr className="divider-green mt-4 max-w-md mx-auto" />
+        <div className="flex items-center justify-center gap-3 mt-4 max-w-md mx-auto">
+          <hr className="divider-gold flex-1" />
+          <span className="text-gold-400 font-display text-base leading-none select-none">✦</span>
+          <hr className="divider-gold flex-1" />
+        </div>
 
         {data.total_games > 0 && (
           <p className="text-sm font-serif text-ink-900 mt-3">

@@ -27,8 +27,8 @@ export default function RecentGames({ games }: RecentGamesProps) {
           {games.map((game) => {
             const winner = game.participants[0]
             return (
-              <div key={game.id} className="px-4 py-3 flex items-center gap-3 flex-wrap hover:bg-parchment-100 transition-colors">
-                <span className="text-xs text-gold-600 font-serif w-24 shrink-0">{formatDateShort(game.played_at)}</span>
+              <div key={game.id} className="px-4 py-3 flex items-center gap-3 flex-wrap hover:bg-parchment-100 transition-all border-l-2 border-l-transparent hover:border-l-gold-400">
+                <span className="text-xs text-gold-600 font-serif w-24 shrink-0 tabular">{formatDateShort(game.played_at)}</span>
                 <div className="flex items-center gap-1 flex-wrap flex-1">
                   {game.participants.map((p) => (
                     <div key={p.player_id} className="flex items-center gap-1">
