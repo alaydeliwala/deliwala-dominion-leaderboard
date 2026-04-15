@@ -5,13 +5,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Dominion game palette
-        parchment: {
-          50:  '#F5EDD4',
-          100: '#EFE0BB',
-          200: '#E6D0A0',
-          300: '#D4BA80',
-        },
+        // Dominion game palette — semantic accent colors (preserved)
         gold: {
           300: '#E8C04A',
           400: '#C9A227',
@@ -34,13 +28,30 @@ const config: Config = {
           800: '#3B1F0A',
           900: '#271408',
         },
+        // Warm neutral palette (Claude-inspired)
+        parchment: {
+          50:  '#F5F4ED',  // page canvas
+          100: '#EDE9DF',  // hover surfaces
+          200: '#DDD8CC',  // borders, dividers
+          300: '#B5B0A5',  // muted / placeholder text
+        },
         ink: {
-          900: '#1C1208',
+          900: '#141413',  // near-black text
+        },
+        warm: {
+          ivory:       '#FAF9F5',  // card surfaces
+          sand:        '#E8E6DC',  // button bg, emphasized borders
+          border:      '#F0EEE6',  // whisper borders
+          olive:       '#5E5D59',  // secondary text
+          stone:       '#87867F',  // tertiary text
+          dark:        '#30302E',  // dark sections
+          'near-black':'#141413',  // primary text
         },
       },
       fontFamily: {
-        display: ['"IM Fell English"', 'Georgia', 'serif'],
-        serif: ['"Crimson Text"', 'Georgia', 'serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        serif:   ['var(--font-sans)',    'system-ui', 'sans-serif'],
+        sans:    ['var(--font-sans)',    'system-ui', 'sans-serif'],
       },
       fontSize: {
         xs:   ['0.875rem', { lineHeight: '1.4' }],   // 14px (was 12px)
