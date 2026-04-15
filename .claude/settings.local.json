@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(systemctl status:*)",
+      "Bash(showmount -e localhost)",
+      "Bash(tailscale status:*)",
+      "Bash(ip addr:*)"
     ]
   }
 }
