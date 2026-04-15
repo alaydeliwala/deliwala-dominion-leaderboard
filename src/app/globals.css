@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,7 +19,7 @@
   --crimson:         #8B1A1A;
 
   /* Warm neutral canvas (Claude-inspired) */
-  --parchment:       #F5F4ED;  /* page background */
+  --parchment:       #E8DBC0;  /* page background */
   --ivory:           #FAF9F5;  /* card surfaces */
   --warm-sand:       #E8E6DC;  /* button bg, emphasized borders */
   --border-cream:    #F0EEE6;  /* whisper borders */
@@ -32,21 +34,21 @@
   body {
     background-color: var(--parchment);
     color: var(--near-black);
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 16px;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 20px;
     line-height: 1.6;
     min-height: 100vh;
   }
 
   h1, h2, h3 {
-    font-family: var(--font-display, Georgia, serif);
+    font-family: 'IM Fell English', Georgia, serif;
     font-weight: 500;
   }
 }
 
 @layer components {
   .font-display {
-    font-family: var(--font-display, Georgia, serif);
+    font-family: 'IM Fell English', Georgia, serif;
   }
 
   /* Standard card — ivory surface with whisper border + soft shadow */

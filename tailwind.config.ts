@@ -30,7 +30,7 @@ const config: Config = {
         },
         // Warm neutral palette (Claude-inspired)
         parchment: {
-          50:  '#F5F4ED',  // page canvas
+          50:  '#E8DBC0',  // page canvas
           100: '#EDE9DF',  // hover surfaces
           200: '#DDD8CC',  // borders, dividers
           300: '#B5B0A5',  // muted / placeholder text
@@ -49,9 +49,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'Georgia', 'serif'],
-        serif:   ['var(--font-sans)',    'system-ui', 'sans-serif'],
-        sans:    ['var(--font-sans)',    'system-ui', 'sans-serif'],
+        display: ['"IM Fell English"', 'Georgia', 'serif'],
+        serif:   ['"Crimson Text"',    'Georgia', 'serif'],
       },
       fontSize: {
         xs:   ['0.875rem', { lineHeight: '1.4' }],   // 14px (was 12px)
