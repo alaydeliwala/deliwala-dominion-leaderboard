@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Crown } from 'lucide-react'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
-import { formatDateShort } from '@/lib/utils'
+import { ClientDateShort } from '@/components/ui/ClientDate'
 
 interface RecentGamesProps {
   games: Game[]
@@ -28,7 +28,7 @@ export default function RecentGames({ games }: RecentGamesProps) {
             const winner = game.participants[0]
             return (
               <div key={game.id} className="px-4 py-3 flex items-center gap-3 flex-wrap hover:bg-parchment-100 transition-colors">
-                <span className="text-xs text-gold-600 font-serif w-24 shrink-0">{formatDateShort(game.played_at)}</span>
+                <span className="text-xs text-gold-600 font-serif w-24 shrink-0"><ClientDateShort dateStr={game.played_at} /></span>
                 <div className="flex items-center gap-1 flex-wrap flex-1">
                   {game.participants.map((p) => (
                     <div key={p.player_id} className="flex items-center gap-1">

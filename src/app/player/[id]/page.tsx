@@ -7,7 +7,8 @@ import { getLeaderboardStats } from '@/lib/queries/stats'
 import { getActiveGames } from '@/lib/queries/games'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Card from '@/components/ui/Card'
-import { formatWinRate, formatDateShort } from '@/lib/utils'
+import { formatWinRate } from '@/lib/utils'
+import { ClientDateShort } from '@/components/ui/ClientDate'
 
 export const dynamic = 'force-dynamic'
 
@@ -158,7 +159,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
               const myParticipant = game.participants.find((p) => p.player_id === player.id)!
               return (
                 <div key={game.id} className="py-2 flex items-center gap-3 flex-wrap text-sm font-serif">
-                  <span className="text-gold-600 w-24 shrink-0">{formatDateShort(game.played_at)}</span>
+                  <span className="text-gold-600 w-24 shrink-0"><ClientDateShort dateStr={game.played_at} /></span>
                   <span className={`font-semibold ${myParticipant.position === 1 ? 'text-forest-800' : 'text-crimson-700'}`}>
                     {myParticipant.position === 1
                       ? <><Crown size={14} className="inline-block mr-1 text-gold-400" />Won</>
