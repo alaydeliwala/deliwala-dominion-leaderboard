@@ -1,5 +1,15 @@
+function parseDbDate(dateStr: string): Date {
+  // SQLite datetime format: YYYY-MM-DD HH:MM:SS (UTC)
+  if (dateStr.includes(' ')) {
+    return new Date(dateStr.replace(' ', 'T') + 'Z')
+  }
+  // Date-only string: YYYY-MM-DD — treat as local midnight so it displays
+  // as the same calendar date in the browser's local timezone.
+  return new Date(dateStr + 'T00:00:00')
+}
+
 export function formatDate(dateStr: string): string {
-  const date = new Date(dateStr + 'T00:00:00')
+  const date = parseDbDate(dateStr)
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -8,7 +18,7 @@ export function formatDate(dateStr: string): string {
 }
 
 export function formatDateShort(dateStr: string): string {
-  const date = new Date(dateStr + 'T00:00:00')
+  const date = parseDbDate(dateStr)
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -23,7 +33,7 @@ export function ordinal(n: number): string {
 }
 
 export function daysSince(dateStr: string): number {
-  const date = new Date(dateStr + 'T00:00:00')
+  const date = parseDbDate(dateStr)
   const now = new Date()
   return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
 }
