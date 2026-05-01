@@ -22,7 +22,8 @@ interface Participant {
 
 export default function AddGameForm() {
   const router = useRouter()
-  const today = new Date().toISOString().split('T')[0]
+  const d = new Date()
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
   const [playedAt, setPlayedAt] = useState(today)
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([1, 2, 3, 4])
