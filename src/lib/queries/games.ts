@@ -70,6 +70,51 @@ export interface CreateGameInput {
   participants: { player_id: number; score: number; position: number }[]
 }
 
+export interface UpdateGameInput {
+  played_at: string
+  notes?: string
+  kingdom?: string[]
+  participants: { player_id: number; score: number }[]
+}
+
+export function updateGame(id: number, input: UpdateGameInput): Game | null {
+  const db = getDb()
+
+  const sorted = [...input.participants].sort((a, b) => b.score - a.score)
+  let pos = 1
+  const withPositions = sorted.map((p, i) => {
+    if (i > 0 && sorted[i].score < sorted[i - 1].score) pos = i + 1
+    return { ...p, position: pos }
+  })
+
+  const updateGameStmt = db.prepare(
+    'UPDATE games SET played_at = ?, notes = ?, kingdom = ? WHERE id = ? AND deleted_at IS NULL'
+  )
+  const deleteParticipants = db.prepare('DELETE FROM game_participants WHERE game_id = ?')
+  const insertParticipant = db.prepare(
+    'INSERT INTO game_participants (game_id, player_id, score, position) VALUES (?, ?, ?, ?)'
+  )
+
+  const run = db.transaction(() => {
+    const result = updateGameStmt.run(
+      input.played_at,
+      input.notes ?? null,
+      input.kingdom ? JSON.stringify(input.kingdom) : null,
+      id
+    )
+    if (result.changes === 0) return false
+    deleteParticipants.run(id)
+    for (const p of withPositions) {
+      insertParticipant.run(id, p.player_id, p.score, p.position)
+    }
+    return true
+  })
+
+  const ok = run()
+  if (!ok) return null
+  return getGameById(id)
+}
+
 export function createGame(input: CreateGameInput): Game {
   const db = getDb()
 
