@@ -1,24 +1,41 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import { Crown, X } from 'lucide-react'
+import { Crown, X, Pencil } from 'lucide-react'
 import type { Game } from '@/types'
 import PlayerAvatar from '@/components/ui/PlayerAvatar'
 import Button from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
 
+interface EditData {
+  played_at: string
+  notes: string
+  kingdom: string[]
+  participants: { player_id: number; score: number }[]
+}
+
 interface GameCardProps {
   game: Game
   onDelete?: (id: number, password: string) => Promise<void>
+  onEdit?: (id: number, password: string, data: EditData) => Promise<void>
 }
 
-export default function GameCard({ game, onDelete }: GameCardProps) {
+export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [shaking, setShaking] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const [editDate, setEditDate] = useState(game.played_at)
+  const [editNotes, setEditNotes] = useState(game.notes ?? '')
+  const [editKingdom, setEditKingdom] = useState(game.kingdom?.join(', ') ?? '')
+  const [editScores, setEditScores] = useState<Record<number, string>>(
+    Object.fromEntries(game.participants.map((p) => [p.player_id, String(p.score)]))
+  )
 
   async function handleDelete() {
     if (!password) { triggerShake('Enter the master password first.'); return }
@@ -30,6 +47,44 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
     } finally {
       setDeleting(false)
     }
+  }
+
+  async function handleSaveEdit() {
+    if (!password) { triggerShake('Enter the master password first.'); return }
+    const participants = game.participants.map((p) => ({
+      player_id: p.player_id,
+      score: parseInt(editScores[p.player_id] ?? '0', 10),
+    }))
+    if (participants.some((p) => isNaN(p.score))) {
+      triggerShake('All scores must be valid numbers.')
+      return
+    }
+    setSaving(true)
+    try {
+      await onEdit?.(game.id, password, {
+        played_at: editDate,
+        notes: editNotes,
+        kingdom: editKingdom ? editKingdom.split(',').map((s) => s.trim()).filter(Boolean) : [],
+        participants,
+      })
+      setShowEdit(false)
+      setPassword('')
+    } catch (e: unknown) {
+      triggerShake(e instanceof Error ? e.message : 'Failed')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function openEdit() {
+    setEditDate(game.played_at)
+    setEditNotes(game.notes ?? '')
+    setEditKingdom(game.kingdom?.join(', ') ?? '')
+    setEditScores(Object.fromEntries(game.participants.map((p) => [p.player_id, String(p.score)])))
+    setPassword('')
+    setError('')
+    setShowDelete(false)
+    setShowEdit(true)
   }
 
   function triggerShake(msg: string) {
@@ -75,92 +130,187 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
       {expanded && (
         <div className="px-6 pb-6 pt-2 border-t border-parchment-200 animate-fade-in space-y-5">
 
-          {/* Standings grid */}
-          <div>
-            <p className="text-xs uppercase tracking-widest font-serif mb-3" style={{ color: '#C9A227' }}>
-              Final Standings
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {game.participants.map((p) => (
-                <div
-                  key={p.player_id}
-                  className={`flex items-center gap-3 px-4 py-3 rounded border ${
-                    p.position === 1
-                      ? 'border-gold-400 bg-gold-400/10'
-                      : 'border-parchment-200 bg-parchment-100/50'
-                  }`}
-                >
-                  <span className="text-lg w-7 text-center shrink-0">
-                    {p.position === 1 ? <Crown size={18} className="text-gold-400" /> : `${p.position}.`}
-                  </span>
-                  <PlayerAvatar player={p.player!} size="md" showName />
-                  <span className="ml-auto text-xl font-bold tabular text-ink-900 shrink-0">
-                    {p.score}
-                    <Image src="/vp-icon.png" width={13} height={13} alt="VP" unoptimized className="inline-block opacity-50 ml-1 mb-0.5" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Kingdom cards */}
-          {game.kingdom && game.kingdom.length > 0 && (
-            <div>
-              <p className="text-xs uppercase tracking-widest font-serif mb-2" style={{ color: '#C9A227' }}>
-                Kingdom Cards
+          {/* Edit form */}
+          {showEdit ? (
+            <div className={shaking ? 'animate-shake' : ''} onClick={(e) => e.stopPropagation()}>
+              <p className="text-xs uppercase tracking-widest font-serif mb-3" style={{ color: '#C9A227' }}>
+                Edit Battle Record
               </p>
-              <div className="flex flex-wrap gap-2">
-                {game.kingdom.map((card) => (
-                  <span key={card} className="text-sm bg-parchment-200 border border-parchment-300 px-3 py-1 rounded-full font-serif text-ink-900">
-                    {card}
-                  </span>
-                ))}
+
+              {/* Date */}
+              <div className="mb-3">
+                <label className="block text-xs font-serif text-ink-900 mb-1">Date of Battle</label>
+                <input
+                  type="date"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                  className="border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif text-ink-900 text-sm focus:border-gold-400 focus:outline-none"
+                />
               </div>
-            </div>
-          )}
 
-          {/* Notes */}
-          {game.notes && (
-            <div>
-              <p className="text-xs uppercase tracking-widest font-serif mb-1" style={{ color: '#C9A227' }}>
-                Notes
-              </p>
-              <p className="text-base italic font-serif text-ink-900">&ldquo;{game.notes}&rdquo;</p>
-            </div>
-          )}
+              {/* Scores */}
+              <div className="mb-3">
+                <label className="block text-xs font-serif text-ink-900 mb-1">Victory Points</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {game.participants.map((p) => (
+                    <div key={p.player_id} className="flex flex-col gap-1">
+                      <span className="text-xs font-serif text-gold-600">{p.player!.name.split(' ')[0]}</span>
+                      <input
+                        type="number"
+                        value={editScores[p.player_id] ?? ''}
+                        onChange={(e) => setEditScores((prev) => ({ ...prev, [p.player_id]: e.target.value }))}
+                        className="border border-parchment-200 rounded px-2 py-1.5 bg-parchment-50 font-serif text-ink-900 text-sm w-full focus:border-gold-400 focus:outline-none"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          {/* Delete */}
-          {onDelete && (
-            <div className="pt-3 border-t border-parchment-200">
-              {!showDelete ? (
+              {/* Kingdom */}
+              <div className="mb-3">
+                <label className="block text-xs font-serif text-ink-900 mb-1">Kingdom Cards (comma-separated)</label>
+                <input
+                  type="text"
+                  value={editKingdom}
+                  onChange={(e) => setEditKingdom(e.target.value)}
+                  placeholder="Smithy, Village, Witch..."
+                  className="w-full border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif text-ink-900 text-sm focus:border-gold-400 focus:outline-none"
+                />
+              </div>
+
+              {/* Notes */}
+              <div className="mb-4">
+                <label className="block text-xs font-serif text-ink-900 mb-1">Notes</label>
+                <textarea
+                  value={editNotes}
+                  onChange={(e) => setEditNotes(e.target.value)}
+                  rows={2}
+                  className="w-full border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif text-ink-900 text-sm focus:border-gold-400 focus:outline-none resize-none"
+                />
+              </div>
+
+              {/* Password + actions */}
+              <div className="flex gap-2 items-center flex-wrap">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError('') }}
+                  placeholder="Master password..."
+                  className="text-sm border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif flex-1 min-w-0 focus:border-gold-400 focus:outline-none"
+                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
+                />
+                <Button size="sm" onClick={handleSaveEdit} disabled={saving}>
+                  {saving ? 'Saving...' : 'Save'}
+                </Button>
                 <button
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded border-2 border-crimson-700 text-crimson-700 font-serif text-sm hover:bg-crimson-700 hover:text-parchment-50 transition-all"
-                  onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
+                  className="text-sm text-ink-900 hover:underline font-serif"
+                  onClick={() => { setShowEdit(false); setPassword(''); setError('') }}
                 >
-                  <X size={14} /> Remove from chronicles
+                  Cancel
                 </button>
-              ) : (
-                <div className={shaking ? 'animate-shake' : ''} onClick={(e) => e.stopPropagation()}>
-                  <div className="flex gap-2 items-center flex-wrap">
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => { setPassword(e.target.value); setError('') }}
-                      placeholder="Master password..."
-                      className="text-sm border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif flex-1 min-w-0"
-                      onKeyDown={(e) => e.key === 'Enter' && handleDelete()}
-                    />
-                    <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
-                      {deleting ? 'Banishing...' : 'Banish'}
-                    </Button>
-                    <button className="text-sm text-ink-900 hover:underline font-serif" onClick={() => { setShowDelete(false); setPassword(''); setError('') }}>
-                      Cancel
-                    </button>
+              </div>
+              {error && <p className="text-sm text-crimson-700 mt-1 font-serif">{error}</p>}
+            </div>
+          ) : (
+            <>
+              {/* Standings grid */}
+              <div>
+                <p className="text-xs uppercase tracking-widest font-serif mb-3" style={{ color: '#C9A227' }}>
+                  Final Standings
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {game.participants.map((p) => (
+                    <div
+                      key={p.player_id}
+                      className={`flex items-center gap-3 px-4 py-3 rounded border ${
+                        p.position === 1
+                          ? 'border-gold-400 bg-gold-400/10'
+                          : 'border-parchment-200 bg-parchment-100/50'
+                      }`}
+                    >
+                      <span className="text-lg w-7 text-center shrink-0">
+                        {p.position === 1 ? <Crown size={18} className="text-gold-400" /> : `${p.position}.`}
+                      </span>
+                      <PlayerAvatar player={p.player!} size="md" showName />
+                      <span className="ml-auto text-xl font-bold tabular text-ink-900 shrink-0">
+                        {p.score}
+                        <Image src="/vp-icon.png" width={13} height={13} alt="VP" unoptimized className="inline-block opacity-50 ml-1 mb-0.5" />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Kingdom cards */}
+              {game.kingdom && game.kingdom.length > 0 && (
+                <div>
+                  <p className="text-xs uppercase tracking-widest font-serif mb-2" style={{ color: '#C9A227' }}>
+                    Kingdom Cards
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {game.kingdom.map((card) => (
+                      <span key={card} className="text-sm bg-parchment-200 border border-parchment-300 px-3 py-1 rounded-full font-serif text-ink-900">
+                        {card}
+                      </span>
+                    ))}
                   </div>
-                  {error && <p className="text-sm text-crimson-700 mt-1 font-serif">{error}</p>}
                 </div>
               )}
-            </div>
+
+              {/* Notes */}
+              {game.notes && (
+                <div>
+                  <p className="text-xs uppercase tracking-widest font-serif mb-1" style={{ color: '#C9A227' }}>
+                    Notes
+                  </p>
+                  <p className="text-base italic font-serif text-ink-900">&ldquo;{game.notes}&rdquo;</p>
+                </div>
+              )}
+
+              {/* Admin actions */}
+              {(onDelete || onEdit) && (
+                <div className="pt-3 border-t border-parchment-200 flex gap-3 flex-wrap">
+                  {onEdit && !showDelete && (
+                    <button
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded border-2 border-gold-400 text-gold-600 font-serif text-sm hover:bg-gold-400 hover:text-ink-900 transition-all"
+                      onClick={(e) => { e.stopPropagation(); openEdit() }}
+                    >
+                      <Pencil size={14} /> Edit record
+                    </button>
+                  )}
+                  {onDelete && (
+                    !showDelete ? (
+                      <button
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded border-2 border-crimson-700 text-crimson-700 font-serif text-sm hover:bg-crimson-700 hover:text-parchment-50 transition-all"
+                        onClick={(e) => { e.stopPropagation(); setShowDelete(true) }}
+                      >
+                        <X size={14} /> Remove from chronicles
+                      </button>
+                    ) : (
+                      <div className={`w-full ${shaking ? 'animate-shake' : ''}`} onClick={(e) => e.stopPropagation()}>
+                        <div className="flex gap-2 items-center flex-wrap">
+                          <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => { setPassword(e.target.value); setError('') }}
+                            placeholder="Master password..."
+                            className="text-sm border border-parchment-200 rounded px-3 py-2 bg-parchment-50 font-serif flex-1 min-w-0"
+                            onKeyDown={(e) => e.key === 'Enter' && handleDelete()}
+                          />
+                          <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
+                            {deleting ? 'Banishing...' : 'Banish'}
+                          </Button>
+                          <button className="text-sm text-ink-900 hover:underline font-serif" onClick={() => { setShowDelete(false); setPassword(''); setError('') }}>
+                            Cancel
+                          </button>
+                        </div>
+                        {error && <p className="text-sm text-crimson-700 mt-1 font-serif">{error}</p>}
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

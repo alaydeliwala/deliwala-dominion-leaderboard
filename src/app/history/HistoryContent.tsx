@@ -48,6 +48,26 @@ export default function HistoryContent() {
     setTimeout(() => setToast(''), 3000)
   }
 
+  async function handleEdit(
+    id: number,
+    password: string,
+    data: { played_at: string; notes: string; kingdom: string[]; participants: { player_id: number; score: number }[] }
+  ) {
+    const res = await fetch(`/api/games/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${password}` },
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) {
+      const json = await res.json()
+      throw new Error(json.error || 'Failed')
+    }
+    const { game } = await res.json()
+    setGames((prev) => prev.map((g) => (g.id === id ? game : g)))
+    setToast('Battle record amended by royal decree.')
+    setTimeout(() => setToast(''), 3000)
+  }
+
   const filtered = filterPlayer
     ? games.filter((g) => g.participants.some((p) => p.player_id === filterPlayer))
     : games
@@ -98,7 +118,7 @@ export default function HistoryContent() {
             {filterPlayer ? ` featuring ${PLAYERS.find(p => p.id === filterPlayer)?.name.split(' ')[0]}` : ''}
           </p>
           {paginated.map((game) => (
-            <GameCard key={game.id} game={game} onDelete={handleDelete} />
+            <GameCard key={game.id} game={game} onDelete={handleDelete} onEdit={handleEdit} />
           ))}
           {hasMore && (
             <button
