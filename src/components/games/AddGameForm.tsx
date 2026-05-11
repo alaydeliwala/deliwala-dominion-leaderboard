@@ -184,7 +184,6 @@ export default function AddGameForm() {
                   <PlayerAvatar player={player} size="sm" showName />
                   <input
                     type="number"
-                    min="0"
                     max="999"
                     placeholder="0"
                     value={scores[id] ?? ''}
