@@ -1,7 +1,7 @@
 import { getDb } from '@/lib/db'
 import { PLAYERS, PLAYER_BY_ID } from '@/lib/players'
 import { daysSince, formatDateShort } from '@/lib/utils'
-import type { PlayerStats, HeadToHeadEntry, FunnyStats, LeaderboardPayload, Game } from '@/types'
+import type { PlayerStats, HeadToHeadEntry, FunnyStats, LeaderboardPayload, FourPlayerStat, Game } from '@/types'
 import { getActiveGames } from './games'
 
 interface RawParticipantRow {
@@ -141,6 +141,7 @@ export function getLeaderboardStats(): LeaderboardPayload {
 
   const funny_stats = computeFunnyStats(rankings, rows, head_to_head)
   const recent_games = getActiveGames(5)
+  const four_player_stats = computeFourPlayerStats(rows)
 
   return {
     rankings,
@@ -148,6 +149,7 @@ export function getLeaderboardStats(): LeaderboardPayload {
     funny_stats,
     recent_games,
     total_games: totalGames.cnt,
+    four_player_stats,
   }
 }
 
@@ -279,6 +281,32 @@ function computeFunnyStats(
     highest_single_score: highestSingleScore,
     longest_loss_streak_ever: longestLossStreakEver,
   }
+}
+
+function computeFourPlayerStats(rows: RawParticipantRow[]): FourPlayerStat[] {
+  const byGame: Record<number, RawParticipantRow[]> = {}
+  for (const row of rows) {
+    if (!byGame[row.game_id]) byGame[row.game_id] = []
+    byGame[row.game_id].push(row)
+  }
+
+  const tally: Record<number, { wins: number; games: number }> = {}
+  for (const p of PLAYERS) tally[p.id] = { wins: 0, games: 0 }
+
+  for (const gameRows of Object.values(byGame)) {
+    if (gameRows.length !== 4) continue
+    for (const row of gameRows) {
+      tally[row.player_id].games++
+      if (row.position === 1) tally[row.player_id].wins++
+    }
+  }
+
+  return PLAYERS.map((p) => ({
+    player: p,
+    wins: tally[p.id].wins,
+    games: tally[p.id].games,
+    win_rate: tally[p.id].games > 0 ? tally[p.id].wins / tally[p.id].games : 0,
+  })).sort((a, b) => b.win_rate - a.win_rate || b.wins - a.wins)
 }
 
 function byPlayer_lastWin(rows: RawParticipantRow[], playerId: number): string | null {

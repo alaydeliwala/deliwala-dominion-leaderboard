@@ -5,6 +5,7 @@ import { getLeaderboardStats } from '@/lib/queries/stats'
 import LeaderboardTable from '@/components/leaderboard/LeaderboardTable'
 import HeadToHeadGrid from '@/components/leaderboard/HeadToHeadGrid'
 import RecentGames from '@/components/leaderboard/RecentGames'
+import FourPlayerStats from '@/components/leaderboard/FourPlayerStats'
 import FunnyStatBanner from '@/components/stats/FunnyStatBanner'
 import Button from '@/components/ui/Button'
 
@@ -65,6 +66,9 @@ export default function HomePage() {
           {data.head_to_head.length > 0 && (
             <HeadToHeadGrid data={data.head_to_head} />
           )}
+
+          {/* 4-Player Stats */}
+          <FourPlayerStats stats={data.four_player_stats} />
 
           {/* Recent Games */}
           <RecentGames games={data.recent_games} />

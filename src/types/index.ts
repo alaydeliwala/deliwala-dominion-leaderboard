@@ -62,10 +62,18 @@ export interface FunnyStats {
   longest_loss_streak_ever: string | null
 }
 
+export interface FourPlayerStat {
+  player: Player
+  wins: number
+  games: number
+  win_rate: number
+}
+
 export interface LeaderboardPayload {
   rankings: PlayerStats[]
   head_to_head: HeadToHeadEntry[]
   funny_stats: FunnyStats
   recent_games: Game[]
   total_games: number
+  four_player_stats: FourPlayerStat[]
 }
